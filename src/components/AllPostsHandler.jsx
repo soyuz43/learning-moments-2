@@ -1,5 +1,5 @@
 // components/AllPostsHandler.jsx
-import React, { useState, useEffect } from 'react';
+import   { useState, useEffect } from 'react';
 import { getPosts, getTopics } from '../services/postService';
 
 export const AllPostsHandler = () => {

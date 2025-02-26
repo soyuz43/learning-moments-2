@@ -4,9 +4,18 @@ const apiUrl = 'http://localhost:8088';
 
 export const getPosts = async () => {
   try {
-    const response = await fetch(`${apiUrl}/posts`);
-    const data = await response.json();
-    return data;
+    const response = await fetch('http://localhost:8088/posts');
+    const posts = await response.json();
+
+    // Fetch topics
+    const topicsResponse = await fetch('http://localhost:8088/topics');
+    const topics = await topicsResponse.json();
+
+    // Merge posts with topics
+    return posts.map(post => ({
+      ...post,
+      topic: topics.find(topic => topic.id === post.topicId) || { name: 'Unknown Topic' }
+    }));
   } catch (error) {
     console.error('Error fetching posts:', error);
     throw error;
