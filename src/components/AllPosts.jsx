@@ -33,8 +33,8 @@ export const AllPosts = () => {
         {posts.map((post) => (
           <li key={post.id}>
             <h2>{post.title}</h2>
-            <p>Topic: {post.topic.name}</p>
-            <p>Likes: {post.likes.length}</p>
+            <p>Topic: {post.topic?.name}</p>
+            <p>Likes: {post.likes?.length}</p>
           </li>
         ))}
       </ul>
