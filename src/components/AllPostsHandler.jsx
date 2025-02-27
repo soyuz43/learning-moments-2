@@ -30,6 +30,17 @@ export const AllPostsHandler = () => {
     setSearchTerm("");
   };
 
+  // Listen for the custom "resetFilters" event
+  useEffect(() => {
+    const handleReset = () => {
+      resetFilters();
+    };
+    window.addEventListener("resetFilters", handleReset);
+    return () => {
+      window.removeEventListener("resetFilters", handleReset);
+    };
+  }, []);
+
   const filteredPosts = posts.filter((post) => {
     const topicMatch = selectedTopic === "" || post.topic?.name === selectedTopic;
     const searchMatch = post.title.toLowerCase().includes(searchTerm.toLowerCase());

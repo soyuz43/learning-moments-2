@@ -1,21 +1,31 @@
 // src/components/NavBar.jsx
 import { NavBarHandler } from "./NavBarHandler";
 
-export const NavBar = (props) => {
-  // Parent can pass onResetFilters to reset dropdown/search filters
-  const { onResetFilters } = props;
-  const { handleLogout, handleAllPosts, isLoggedIn } = NavBarHandler({ onResetFilters });
+export const NavBar = () => {
+  const { handleLogout, handleAllPosts, isLoggedIn } = NavBarHandler();
 
   return (
-    <ul>
-      <li>
-        <button onClick={handleAllPosts}>All Posts</button>
-      </li>
-      {isLoggedIn && (
-        <li>
-          <button onClick={handleLogout}>Logout</button>
+    <nav className="fixed top-0 left-0 w-full h-16 bg-gray-900 bg-opacity-80 backdrop-blur-md shadow-md flex items-center justify-center z-50 border-b border-gray-800">
+      <ul className="flex gap-6 text-white font-medium text-lg">
+        <li className="group">
+          <button
+            onClick={handleAllPosts}
+            className="px-6 py-2 rounded-lg transition transform hover:scale-105 hover:text-indigo-400 group-hover:brightness-75"
+          >
+            All Posts
+          </button>
         </li>
-      )}
-    </ul>
+        {isLoggedIn && (
+          <li className="group">
+            <button
+              onClick={handleLogout}
+              className="px-6 py-2 rounded-lg transition transform hover:scale-105 hover:text-red-400 group-hover:brightness-75"
+            >
+              Logout
+            </button>
+          </li>
+        )}
+      </ul>
+    </nav>
   );
 };
