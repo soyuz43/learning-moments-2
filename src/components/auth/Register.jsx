@@ -54,53 +54,51 @@ export const Register = (props) => {
   }
 
   return (
-    <main className="auth-container">
-      <form className="auth-form" onSubmit={handleRegister}>
-        <h1 className="header">Learning Moments</h1>
-        <h2>Please Register</h2>
-        <fieldset className="auth-fieldset">
-          <div>
-            <input
-              onChange={updateUser}
-              type="text"
-              id="fullName"
-              className="auth-form-input"
-              placeholder="Enter your name"
-              required
-              autoFocus
-            />
-          </div>
-        </fieldset>
-        <fieldset className="auth-fieldset">
-          <div>
-            <input
-              onChange={updateUser}
-              type="email"
-              id="email"
-              className="auth-form-input"
-              placeholder="Email address"
-              required
-            />
-          </div>
-        </fieldset>
-        <fieldset className="auth-fieldset">
-          <div>
-            <input
-              onChange={updateUser}
-              type="number"
-              id="cohort"
-              className="auth-form-input"
-              placeholder="Cohort #"
-              required
-            />
-          </div>
-        </fieldset>
-        <fieldset className="auth-fieldset">
-          <div>
-            <button type="submit">Register</button>
-          </div>
-        </fieldset>
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-6 py-10">
+      <form 
+        className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-700"
+        onSubmit={handleRegister}
+      >
+        <h1 className="text-4xl font-extrabold text-gray-100 tracking-wide mb-4 text-center">
+          Learning Moments
+        </h1>
+        <h2 className="text-lg text-gray-400 text-center mb-6">Create an Account</h2>
+  
+        <div className="space-y-4">
+          <input
+            onChange={updateUser}
+            type="text"
+            id="fullName"
+            className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+            placeholder="Enter your name"
+            required
+          />
+          <input
+            onChange={updateUser}
+            type="email"
+            id="email"
+            className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+            placeholder="Email address"
+            required
+          />
+          <input
+            onChange={updateUser}
+            type="number"
+            id="cohort"
+            className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+            placeholder="Cohort #"
+            required
+          />
+        </div>
+  
+        <button
+          type="submit"
+          className="w-full mt-6 px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition font-medium transform hover:scale-105"
+        >
+          Register
+        </button>
       </form>
     </main>
-  )
+  );
+  
 }

@@ -1,7 +1,7 @@
 // src/components/NavBarHandler.jsx
 import { useNavigate } from "react-router-dom";
 
-export const NavBarHandler = ({ onResetFilters }) => {
+export const NavBarHandler = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -10,9 +10,8 @@ export const NavBarHandler = ({ onResetFilters }) => {
   };
 
   const handleAllPosts = () => {
-    if (onResetFilters) {
-      onResetFilters();
-    }
+    // Dispatch a custom event to trigger filter reset in AllPostsHandler
+    window.dispatchEvent(new CustomEvent("resetFilters"));
     navigate("/");
   };
 
