@@ -1,15 +1,15 @@
-// components/AllPosts.jsx
-import React from 'react';
-import { AllPostsHandler } from './AllPostsHandler';
+// src/components/AllPosts.jsx
+import { AllPostsHandler } from "./AllPostsHandler";
 
 export const AllPosts = () => {
   const {
     topics,
-    posts,
+    filteredPosts,
     selectedTopic,
     searchTerm,
     handleTopicChange,
     handleSearchChange,
+    resetFilters,
   } = AllPostsHandler();
 
   return (
@@ -17,11 +17,12 @@ export const AllPosts = () => {
       <h1>All Posts</h1>
       <select value={selectedTopic} onChange={(e) => handleTopicChange(e.target.value)}>
         <option value="">All Topics</option>
-        {topics.map((topic) => (
-          <option key={topic.id} value={topic.name}>
-            {topic.name}
-          </option>
-        ))}
+        {Array.isArray(topics) &&
+          topics.map((topic) => (
+            <option key={topic.id} value={topic.name}>
+              {topic.name}
+            </option>
+          ))}
       </select>
       <input
         type="search"
@@ -30,11 +31,12 @@ export const AllPosts = () => {
         placeholder="Search posts"
       />
       <ul>
-        {posts.map((post) => (
+        {filteredPosts.map((post) => (
           <li key={post.id}>
             <h2>{post.title}</h2>
-            <p>Topic: {post.topic?.name}</p>
-            <p>Likes: {post.likes?.length}</p>
+            <p>Topic: {post.topic?.name || "N/A"}</p>
+            <p>{post.body}</p>
+            <p>Likes: {post.likes?.length || 0}</p>
           </li>
         ))}
       </ul>
