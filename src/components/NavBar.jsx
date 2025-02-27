@@ -1,26 +1,21 @@
 // src/components/NavBar.jsx
-import { Link, useNavigate } from "react-router-dom";
 import { NavBarHandler } from "./NavBarHandler";
 
-export const NavBar = ({ resetDropdown }) => {
-  const { handleLogout, isLoggedIn } = NavBarHandler();
-  const navigate = useNavigate();
-
-  const handleNavClick = () => {
-    resetDropdown?.(); // Reset dropdown state if function is passed
-    navigate("/"); // Ensure navigation occurs
-  };
+export const NavBar = (props) => {
+  // Parent can pass onResetFilters to reset dropdown/search filters
+  const { onResetFilters } = props;
+  const { handleLogout, handleAllPosts, isLoggedIn } = NavBarHandler({ onResetFilters });
 
   return (
     <ul>
       <li>
-        <button onClick={handleNavClick}>All Posts</button>
+        <button onClick={handleAllPosts}>All Posts</button>
       </li>
-      {isLoggedIn ? (
+      {isLoggedIn && (
         <li>
           <button onClick={handleLogout}>Logout</button>
         </li>
-      ) : null}
+      )}
     </ul>
   );
 };

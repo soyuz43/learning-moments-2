@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="2000" dy="2000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="2400" math="0" shadow="0">
+  <root>
+    <!-- Root cells -->
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+
+    <!-- 1) HOME / ALL POSTS -->
+    <mxCell id="frame1" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="10" y="10" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame1_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame1">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame1_title" value="Home / All Posts" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame1">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Topic Dropdown -->
+    <mxCell id="frame1_topic" value="Topic Dropdown Filter" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame1">
+      <mxGeometry x="20" y="120" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Search Field -->
+    <mxCell id="frame1_search" value="Search Input Field" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame1">
+      <mxGeometry x="20" y="160" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- List of Posts -->
+    <mxCell id="frame1_list" value="List of Posts (Title | Topic | # of Likes)" style="text;align=left;verticalAlign=top;" vertex="1" parent="frame1">
+      <mxGeometry x="20" y="200" width="560" height="140" as="geometry"/>
+    </mxCell>
+
+    <!-- 2) NEW POST -->
+    <mxCell id="frame2" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="640" y="10" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame2_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame2">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame2_title" value="New Post" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame2">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Title Field -->
+    <mxCell id="frame2_titleField" value="Title Field" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame2">
+      <mxGeometry x="20" y="120" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Body Field -->
+    <mxCell id="frame2_bodyField" value="Body Field" style="text;align=left;verticalAlign=top;" vertex="1" parent="frame2">
+      <mxGeometry x="20" y="160" width="560" height="100" as="geometry"/>
+    </mxCell>
+    <!-- Topic Dropdown -->
+    <mxCell id="frame2_topic" value="Topic Dropdown" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame2">
+      <mxGeometry x="20" y="270" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Save Button -->
+    <mxCell id="frame2_save" value="Save Button" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame2">
+      <mxGeometry x="20" y="310" width="100" height="30" as="geometry"/>
+    </mxCell>
+
+    <!-- 3) POST DETAILS -->
+    <mxCell id="frame3" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="10" y="400" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame3_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame3_title" value="Post Details" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Post Title -->
+    <mxCell id="frame3_postTitle" value="Post Title" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="120" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Author -->
+    <mxCell id="frame3_author" value="Author Name (link to Profile)" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="160" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Topic -->
+    <mxCell id="frame3_topic" value="Topic" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="200" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Date -->
+    <mxCell id="frame3_date" value="Date" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="240" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Body -->
+    <mxCell id="frame3_body" value="Post Body" style="text;align=left;verticalAlign=top;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="280" width="560" height="60" as="geometry"/>
+    </mxCell>
+    <!-- Likes & Buttons -->
+    <mxCell id="frame3_likes" value="Number of Likes" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="20" y="350" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <mxCell id="frame3_likeEditBtn" value="[Like Button if not author] [Edit Button if author]" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame3">
+      <mxGeometry x="240" y="350" width="340" height="30" as="geometry"/>
+    </mxCell>
+
+    <!-- 4) EDIT POST -->
+    <mxCell id="frame4" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="640" y="400" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame4_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame4">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame4_title" value="Edit Post" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame4">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Title Field -->
+    <mxCell id="frame4_editTitle" value="Title Field" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame4">
+      <mxGeometry x="20" y="120" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Body Field -->
+    <mxCell id="frame4_editBody" value="Body Field" style="text;align=left;verticalAlign=top;" vertex="1" parent="frame4">
+      <mxGeometry x="20" y="160" width="560" height="100" as="geometry"/>
+    </mxCell>
+    <!-- Topic Dropdown -->
+    <mxCell id="frame4_editTopic" value="Topic Dropdown" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame4">
+      <mxGeometry x="20" y="270" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Save Button -->
+    <mxCell id="frame4_editSave" value="Save Button" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame4">
+      <mxGeometry x="20" y="310" width="100" height="30" as="geometry"/>
+    </mxCell>
+
+    <!-- 5) MY POSTS -->
+    <mxCell id="frame5" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="10" y="790" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame5_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame5">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame5_title" value="My Posts" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame5">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- User's Posts List -->
+    <mxCell id="frame5_list" value="List of User's Posts: [Title link to Post Details] [Delete button]" style="text;align=left;verticalAlign=top;" vertex="1" parent="frame5">
+      <mxGeometry x="20" y="120" width="560" height="250" as="geometry"/>
+    </mxCell>
+
+    <!-- 6) FAVORITES -->
+    <mxCell id="frame6" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="640" y="790" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame6_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame6">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame6_title" value="Favorites" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame6">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Favorites List -->
+    <mxCell id="frame6_list" value="List of Liked Posts: [Title link to Post Details] [Remove button]" style="text;align=left;verticalAlign=top;" vertex="1" parent="frame6">
+      <mxGeometry x="20" y="120" width="560" height="250" as="geometry"/>
+    </mxCell>
+
+    <!-- 7) USER PROFILE -->
+    <mxCell id="frame7" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="10" y="1180" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame7_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame7">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame7_title" value="User Profile" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame7">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Full Name -->
+    <mxCell id="frame7_fullName" value="Full Name" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame7">
+      <mxGeometry x="20" y="120" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Cohort Number -->
+    <mxCell id="frame7_cohort" value="Cohort Number" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame7">
+      <mxGeometry x="20" y="160" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Number of Posts -->
+    <mxCell id="frame7_numPosts" value="Number of Posts Written" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame7">
+      <mxGeometry x="20" y="200" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Edit Button (if viewing own profile) -->
+    <mxCell id="frame7_editBtn" value="[Edit Profile Button if own]" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame7">
+      <mxGeometry x="20" y="240" width="300" height="30" as="geometry"/>
+    </mxCell>
+
+    <!-- 8) EDIT PROFILE -->
+    <mxCell id="frame8" value="" style="rounded=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="640" y="1180" width="600" height="370" as="geometry"/>
+    </mxCell>
+    <!-- Nav Bar -->
+    <mxCell id="frame8_nav" value="All Posts | My Posts | Favorites | New Post | Profile | Logout" style="text;align=center;verticalAlign=middle;" vertex="1" parent="frame8">
+      <mxGeometry x="20" y="20" width="560" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Frame Title -->
+    <mxCell id="frame8_title" value="Edit Profile" style="text;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="frame8">
+      <mxGeometry x="20" y="70" width="200" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Full Name Field -->
+    <mxCell id="frame8_fullNameField" value="Full Name Field" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame8">
+      <mxGeometry x="20" y="120" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Cohort Field -->
+    <mxCell id="frame8_cohortField" value="Cohort Number Field" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame8">
+      <mxGeometry x="20" y="160" width="300" height="30" as="geometry"/>
+    </mxCell>
+    <!-- Save Button -->
+    <mxCell id="frame8_saveProfile" value="Save Button" style="text;align=left;verticalAlign=middle;" vertex="1" parent="frame8">
+      <mxGeometry x="20" y="200" width="100" height="30" as="geometry"/>
+    </mxCell>
+
+  </root>
+</mxGraphModel>
