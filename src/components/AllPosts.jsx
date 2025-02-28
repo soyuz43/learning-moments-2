@@ -13,65 +13,68 @@ export const AllPosts = () => {
   } = AllPostsHandler();
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center px-6 py-10">
-      {/* Brutalist Title */}
-      <h1 className="text-5xl font-extrabold tracking-tight text-gray-100 mb-6 uppercase">
-        ALL POSTS
-      </h1>
+    <div className="bg-slate-900 min-h-screen pt-20">
+      {/* Container */}
+      <div className="container mx-auto px-4 py-8 text-slate-100">
+        <h1 className="text-4xl font-bold mb-8">All Posts</h1>
 
-      {/* Filters Section */}
-      <div className="flex flex-col md:flex-row gap-4 w-full max-w-3xl">
-        <select
-          value={selectedTopic}
-          onChange={(e) => handleTopicChange(e.target.value)}
-          className="bg-gray-800 text-gray-300 px-4 py-2 rounded-lg border border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
-        >
-          <option value="">All Topics</option>
-          {Array.isArray(topics) &&
-            topics.map((topic) => (
-              <option key={topic.id} value={topic.name}>
-                {topic.name}
-              </option>
-            ))}
-        </select>
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+          <select
+            value={selectedTopic}
+            onChange={(e) => handleTopicChange(e.target.value)}
+            className="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+          >
+            <option value="">All Topics</option>
+            {Array.isArray(topics) &&
+              topics.map((topic) => (
+                <option key={topic.id} value={topic.name}>
+                  {topic.name}
+                </option>
+              ))}
+          </select>
 
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={(e) => handleSearchChange(e.target.value)}
-          placeholder="Search posts..."
-          className="bg-gray-800 text-gray-300 px-4 py-2 rounded-lg border border-gray-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition w-full md:w-auto"
-        />
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Search posts..."
+            className="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded-md focus:ring-2 focus:ring-cyan-500 focus:outline-none w-full md:w-auto"
+          />
 
-        <button
-          onClick={resetFilters}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition font-medium"
-        >
-          Reset
-        </button>
-      </div>
+          <button
+            onClick={resetFilters}
+            className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-md font-medium transition"
+          >
+            Reset
+          </button>
+        </div>
 
-      {/* Posts List */}
-      <ul className="mt-8 w-full max-w-3xl space-y-6">
+        {/* Posts List */}
         {filteredPosts.length === 0 ? (
-          <p className="text-gray-400 text-center">No posts found.</p>
+          <p className="text-slate-400">No posts found.</p>
         ) : (
-          filteredPosts.map((post) => (
-            <li
-              key={post.id}
-              className="bg-gray-800 bg-opacity-80 shadow-lg backdrop-blur-md rounded-lg p-6 border border-gray-700 transition hover:scale-[1.02] hover:border-indigo-500 group relative"
-            >
-              {/* Apply dim effect to everything outside this item on hover */}
-              <div className="group-hover:brightness-75 transition">
-                <h2 className="text-3xl font-semibold text-indigo-400">{post.title}</h2>
-                <p className="text-gray-400 text-sm mt-2">Topic: {post.topic?.name || "N/A"}</p>
-                <p className="text-gray-300 text-sm whitespace-pre-line mt-3">{post.body}</p>
-                <p className="text-gray-500 text-xs mt-4">❤️ {post.likes?.length || 0} Likes</p>
-              </div>
-            </li>
-          ))
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredPosts.map((post) => (
+              <li
+                key={post.id}
+                className="bg-slate-800 rounded-lg shadow-md p-4 border border-slate-700"
+              >
+                <h2 className="text-xl font-semibold text-slate-100 mb-1">
+                  {post.title}
+                </h2>
+                <p className="text-sm text-slate-400 mb-2">
+                  Topic: {post.topic?.name || "N/A"}
+                </p>
+                <p className="text-slate-300 mb-2">{post.body}</p>
+                <div className="mt-2 border-t border-slate-700 pt-2 text-slate-400 text-sm">
+                  Likes: {post.likes?.length || 0}
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
-      </ul>
+      </div>
     </div>
   );
 };
