@@ -87,3 +87,21 @@ export const getPostsByUserId = async (userId) => {
     throw error;
   }
 };
+
+
+export const deletePost = async (postId) => {
+  await fetch(`${apiUrl}/posts/${postId}`, {
+    method: "DELETE",
+  });
+};
+
+export const createPost = async (postData) => {
+  const response = await fetch(`${apiUrl}/posts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData),
+  });
+  return response.json();
+};
