@@ -105,3 +105,13 @@ export const createPost = async (postData) => {
   });
   return response.json();
 };
+
+export const updatePost = async (postId, updatedPost) => {
+  await fetch(`${apiUrl}/posts/${postId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedPost),
+  });
+};
