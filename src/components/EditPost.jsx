@@ -1,118 +1,88 @@
 // src/components/EditPost.jsx
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { getPostById, updatePost, getTopics } from "../services/postService"
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getTopics, getPostById, updatePost } from "../../services/postService";
 
-export const EditPost = ({ currentUser }) => {
-  const { postId } = useParams()
-  const navigate = useNavigate()
+export const EditPost = () => {
+  const { postId } = useParams();
+  const navigate = useNavigate();
 
-  const [post, setPost] = useState({
-    title: "",
-    body: "",
-    topicId: "",
-  })
-  const [topics, setTopics] = useState([])
+  const [post, setPost] = useState(null);
+  const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState("");
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchData = async () => {
       try {
-        const fetchedPost = await getPostById(postId)
-        setPost(fetchedPost)
+        const fetchedPost = await getPostById(postId);
+        const fetchedTopics = await getTopics();
+
+        setPost(fetchedPost);
+        setTopics(fetchedTopics);
+        setSelectedTopic(fetchedPost.topicId);
       } catch (error) {
-        console.error("Error fetching post:", error)
+        console.error("Error fetching post or topics:", error);
       }
-    }
-    fetchPost()
-  }, [postId])
+    };
+    fetchData();
+  }, [postId]);
 
-  useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const topicsData = await getTopics()
-        setTopics(topicsData)
-      } catch (error) {
-        console.error("Error fetching topics:", error)
-      }
-    }
-    fetchTopics()
-  }, [])
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (!post || !selectedTopic) return;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setPost((prev) => ({ ...prev, [name]: value }))
-  }
+    const updatedPost = { ...post, topicId: selectedTopic };
+    await updatePost(postId, updatedPost);
+    navigate("/my-posts");
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!currentUser) return
-
-    // Ensure topicId is an integer if using a dropdown
-    const updatedPost = {
-      ...post,
-      topicId: parseInt(post.topicId),
-    }
-
-    try {
-      await updatePost(postId, updatedPost)
-      navigate("/my-posts")
-    } catch (error) {
-      console.error("Error updating post:", error)
-    }
-  }
-
-  if (!post) return <p>Loading post...</p>
+  if (!post) return <div className="text-slate-400">Loading...</div>;
 
   return (
-    <div className="min-h-screen pt-20 bg-gray-900 text-white px-6 py-10 flex flex-col items-center">
-      <h1 className="text-3xl font-extrabold text-gray-100 mb-6">Edit Post</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-xl border border-gray-700"
-      >
-        <label className="block text-gray-400 mb-2">Title</label>
+    <div className="bg-slate-900 min-h-screen pt-20 text-slate-100 flex flex-col items-center px-6 py-10">
+      <h1 className="text-4xl font-bold mb-8">Edit Post</h1>
+      <form onSubmit={handleSave} className="bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-xl border border-slate-700">
+        <label className="block text-slate-300 text-lg font-medium">Title</label>
         <input
           type="text"
-          name="title"
           value={post.title}
-          onChange={handleChange}
+          onChange={(e) => setPost({ ...post, title: e.target.value })}
+          className="w-full bg-slate-700 text-slate-200 px-4 py-2 rounded-md mt-1 border border-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
           required
-          className="w-full mb-4 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
 
-        <label className="block text-gray-400 mb-2">Body</label>
+        <label className="block text-slate-300 text-lg font-medium mt-4">Body</label>
         <textarea
-          name="body"
           value={post.body}
-          onChange={handleChange}
+          onChange={(e) => setPost({ ...post, body: e.target.value })}
+          className="w-full bg-slate-700 text-slate-200 px-4 py-2 rounded-md mt-1 border border-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none h-32 resize-none"
           required
-          rows={4}
-          className="w-full mb-4 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
 
-        <label className="block text-gray-400 mb-2">Topic</label>
-        <select
-          name="topicId"
-          value={post.topicId}
-          onChange={handleChange}
-          required
-          className="w-full mb-6 bg-gray-700 text-gray-300 px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">Select a topic</option>
+        <label className="block text-slate-300 text-lg font-medium mt-4">Select Topic</label>
+        <div className="flex flex-col gap-2 mt-2">
           {topics.map((topic) => (
-            <option key={topic.id} value={topic.id}>
+            <label key={topic.id} className="flex items-center gap-2 text-slate-300">
+              <input
+                type="radio"
+                name="topic"
+                value={topic.id}
+                checked={selectedTopic === topic.id}
+                onChange={(e) => setSelectedTopic(Number(e.target.value))}
+                className="accent-cyan-500"
+              />
               {topic.name}
-            </option>
+            </label>
           ))}
-        </select>
+        </div>
 
         <button
           type="submit"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition font-medium"
+          className="bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-md mt-6 transition font-medium w-full"
         >
-          Save
+          Save Changes
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
