@@ -1,7 +1,7 @@
 // src/components/EditPost.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTopics, getPostById, updatePost } from "../../services/postService";
+import { getTopics, getPostById, updatePost } from "../services/postService";
 
 export const EditPost = () => {
   const { postId } = useParams();
