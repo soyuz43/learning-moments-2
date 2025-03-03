@@ -37,6 +37,7 @@ export const Login = () => {
             Learning Moments
           </h1>
           <h2 className="text-lg text-gray-400 text-center mb-6">Please sign in</h2>
+          <h3>liam.chen@example.com</h3>
   
           <div className="space-y-4">
             <input

@@ -1,6 +1,7 @@
 // src/views/ApplicationViews.jsx
 import { Routes, Route } from "react-router-dom";
 import { AllPosts } from "../components/AllPosts";
+import { EditProfile } from "../components/EditProfile";
 import { Login } from "../components/auth/Login";
 import { Register } from "../components/auth/Register";
 import { MyPosts } from "../components/MyPosts";
@@ -11,24 +12,20 @@ import { Authorized } from "./Authorized";
 import { NavBar } from "../components/NavBar";
 
 export const ApplicationViews = () => {
-  // 1. Retrieve the current user from localStorage
   const currentUser = localStorage.getItem("learning_user")
     ? JSON.parse(localStorage.getItem("learning_user"))
     : null;
 
   return (
     <>
-      {/* Navbar stays fixed at the top */}
       <NavBar />
-
-      {/* Page container to prevent content cutoff under navbar */}
       <div className="pt-[72px] px-6">
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Protected Routes (Require Authentication) */}
+          {/* Protected Routes */}
           <Route
             path="*"
             element={
@@ -54,6 +51,18 @@ export const ApplicationViews = () => {
                     path="/post/:postId"
                     element={<PostDetails currentUser={currentUser} />}
                   />
+
+                  {/* 🔥 Add the /edit-profile route here */}
+                  <Route
+                    path="/edit-profile"
+                    element={
+                      <EditProfile
+                        user={currentUser}
+                        onSaveProfile={() => {}}
+                      />
+                    }
+                  />
+
                   <Route
                     path="*"
                     element={<div className="text-white">Not Found</div>}
