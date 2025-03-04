@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/vite": "^4.0.9",
+    "framer-motion": "^12.4.10",
     "learning-moments": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
