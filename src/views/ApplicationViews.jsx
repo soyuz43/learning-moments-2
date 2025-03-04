@@ -1,15 +1,16 @@
 // src/views/ApplicationViews.jsx
+import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { AllPosts } from "../components/AllPosts";
+import { Authorized } from "./Authorized";
+import { NavBar } from "../components/NavBar";
+import { AllPostsWrapper } from "../components/post/wrappers/AllPostsWrapper";
+import { MyPostsListWrapper } from "../components/post/wrappers/MyPostsListWrapper";
+import { PostDetailsWrapper } from "../components/post/wrappers/PostDetailsWrapper";
+import { NewPost } from "../components/NewPost";
+import { EditPost } from "../components/EditPost";
 import { EditProfile } from "../components/EditProfile";
 import { Login } from "../components/auth/Login";
 import { Register } from "../components/auth/Register";
-import { MyPosts } from "../components/MyPosts";
-import { NewPost } from "../components/NewPost";
-import { EditPost } from "../components/EditPost";
-import { PostDetails } from "../components/PostDetails";
-import { Authorized } from "./Authorized";
-import { NavBar } from "../components/NavBar";
 
 export const ApplicationViews = () => {
   const currentUser = localStorage.getItem("learning_user")
@@ -33,11 +34,11 @@ export const ApplicationViews = () => {
                 <Routes>
                   <Route
                     path="/"
-                    element={<AllPosts currentUser={currentUser} />}
+                    element={<AllPostsWrapper currentUser={currentUser} />}
                   />
                   <Route
                     path="/my-posts"
-                    element={<MyPosts currentUser={currentUser} />}
+                    element={<MyPostsListWrapper currentUser={currentUser} />}
                   />
                   <Route
                     path="/new-post"
@@ -49,10 +50,8 @@ export const ApplicationViews = () => {
                   />
                   <Route
                     path="/post/:postId"
-                    element={<PostDetails currentUser={currentUser} />}
+                    element={<PostDetailsWrapper currentUser={currentUser} />}
                   />
-
-                  {/* 🔥 Add the /edit-profile route here */}
                   <Route
                     path="/edit-profile"
                     element={
@@ -62,7 +61,6 @@ export const ApplicationViews = () => {
                       />
                     }
                   />
-
                   <Route
                     path="*"
                     element={<div className="text-white">Not Found</div>}
