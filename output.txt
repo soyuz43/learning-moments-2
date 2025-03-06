@@ -1,0 +1,1623 @@
+### src/App.jsx
+```jsx
+// src/App.jsx
+import { Route, Routes } from "react-router-dom";
+import { Login } from "./components/auth/Login";
+import { Register } from "./components/auth/Register";
+import { Authorized } from "./views/Authorized";
+import { ApplicationViews } from "./views/ApplicationViews";
+
+export const App = () => {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route
+        path="*"
+        element={
+          <Authorized>
+            <ApplicationViews />
+          </Authorized>
+        }
+      />
+    </Routes>
+  );
+};
+
+```
+BREAK
+
+### src/components/auth/Login.jsx
+```jsx
+// learning-moments/src/components/auth/Login.jsx
+import   { useState } from "react"
+import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import "./Login.css"
+import { getUserByEmail } from "../../services/userService"
+
+export const Login = () => {
+  const [email, set] = useState("")
+  const navigate = useNavigate()
+
+  const handleLogin = (e) => {
+    e.preventDefault()
+
+    return getUserByEmail(email).then((foundUsers) => {
+      if (foundUsers.length === 1) {
+        const user = foundUsers[0]
+        localStorage.setItem(
+          "learning_user",
+          JSON.stringify({
+            id: user.id,
+          })
+        )
+
+        navigate("/")
+      } else {
+        window.alert("Invalid login")
+      }
+    })
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-6 py-10">
+      <section className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-700">
+        <form onSubmit={handleLogin}>
+          <h1 className="text-4xl font-extrabold text-gray-100 tracking-wide mb-4 text-center">
+            Learning Moments
+          </h1>
+          <h2 className="text-lg text-gray-400 text-center mb-6">Please sign in</h2>
+          <h3>liam.chen@example.com</h3>
+  
+          <div className="space-y-4">
+            <input
+              type="email"
+              value={email}
+              className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+              onChange={(evt) => set(evt.target.value)}
+              placeholder="Email address"
+              required
+            />
+          </div>
+  
+          <button
+            type="submit"
+            className="w-full mt-6 px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition font-medium transform hover:scale-105"
+          >
+            Sign in
+          </button>
+        </form>
+      </section>
+  
+      <section className="mt-4 text-gray-400">
+        <Link
+          to="/register"
+          className="hover:text-indigo-400 transition transform hover:scale-105"
+        >
+          Not a member yet? Register here
+        </Link>
+      </section>
+    </main>
+  );
+  
+}
+
+
+```
+BREAK
+
+### src/components/auth/Register.jsx
+```jsx
+// src/components/auth/Register.jsx
+
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import "./Login.css"
+import { createUser, getUserByEmail } from "../../services/userService"
+
+export const Register = (props) => {
+  const [user, setUser] = useState({
+    email: "",
+    fullName: "",
+    cohort: 0,
+  })
+  let navigate = useNavigate()
+
+  const registerNewUser = () => {
+    const newUser = {
+      ...user,
+      cohort: parseInt(user.cohort),
+    }
+
+    createUser(newUser).then((createdUser) => {
+      if (createdUser.hasOwnProperty("id")) {
+        localStorage.setItem(
+          "learning_user",
+          JSON.stringify({
+            id: createdUser.id,
+            staff: createdUser.isStaff,
+          })
+        )
+
+        navigate("/")
+      }
+    })
+  }
+
+  const handleRegister = (e) => {
+    e.preventDefault()
+    getUserByEmail(user.email).then((response) => {
+      if (response.length > 0) {
+        // Duplicate email. No good.
+        window.alert("Account with that email address already exists")
+      } else {
+        // Good email, create user.
+        registerNewUser()
+      }
+    })
+  }
+
+  const updateUser = (evt) => {
+    const copy = { ...user }
+    copy[evt.target.id] = evt.target.value
+    setUser(copy)
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-6 py-10">
+      <form 
+        className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-700"
+        onSubmit={handleRegister}
+      >
+        <h1 className="text-4xl font-extrabold text-gray-100 tracking-wide mb-4 text-center">
+          Learning Moments
+        </h1>
+        <h2 className="text-lg text-gray-400 text-center mb-6">Create an Account</h2>
+  
+        <div className="space-y-4">
+          <input
+            onChange={updateUser}
+            type="text"
+            id="fullName"
+            className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+            placeholder="Enter your name"
+            required
+          />
+          <input
+            onChange={updateUser}
+            type="email"
+            id="email"
+            className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+            placeholder="Email address"
+            required
+          />
+          <input
+            onChange={updateUser}
+            type="number"
+            id="cohort"
+            className="w-full px-4 py-3 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+            placeholder="Cohort #"
+            required
+          />
+        </div>
+  
+        <button
+          type="submit"
+          className="w-full mt-6 px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition font-medium transform hover:scale-105"
+        >
+          Register
+        </button>
+      </form>
+    </main>
+  );
+  
+}
+
+```
+BREAK
+
+### src/components/EditPost.jsx
+```jsx
+// src/components/EditPost.jsx
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getTopics, getPostById, updatePost } from "../services/postService";
+
+export const EditPost = () => {
+  const { postId } = useParams();
+  const navigate = useNavigate();
+
+  const [post, setPost] = useState(null);
+  const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedPost = await getPostById(postId);
+        const fetchedTopics = await getTopics();
+
+        setPost(fetchedPost);
+        setTopics(fetchedTopics);
+        setSelectedTopic(fetchedPost.topicId);
+      } catch (error) {
+        console.error("Error fetching post or topics:", error);
+      }
+    };
+    fetchData();
+  }, [postId]);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (!post || !selectedTopic) return;
+
+    const updatedPost = { ...post, topicId: selectedTopic };
+    await updatePost(postId, updatedPost);
+    navigate("/my-posts");
+  };
+
+  if (!post) return <div className="text-slate-400">Loading...</div>;
+
+  return (
+    <div className="bg-slate-900 min-h-screen pt-20 text-slate-100 flex flex-col items-center px-6 py-10">
+      <h1 className="text-4xl font-bold mb-8">Edit Post</h1>
+      <form onSubmit={handleSave} className="bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-xl border border-slate-700">
+        <label className="block text-slate-300 text-lg font-medium">Title</label>
+        <input
+          type="text"
+          value={post.title}
+          onChange={(e) => setPost({ ...post, title: e.target.value })}
+          className="w-full bg-slate-700 text-slate-200 px-4 py-2 rounded-md mt-1 border border-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+          required
+        />
+
+        <label className="block text-slate-300 text-lg font-medium mt-4">Body</label>
+        <textarea
+          value={post.body}
+          onChange={(e) => setPost({ ...post, body: e.target.value })}
+          className="w-full bg-slate-700 text-slate-200 px-4 py-2 rounded-md mt-1 border border-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none h-32 resize-none"
+          required
+        />
+
+        <label className="block text-slate-300 text-lg font-medium mt-4">Select Topic</label>
+        <div className="flex flex-col gap-2 mt-2">
+          {topics.map((topic) => (
+            <label key={topic.id} className="flex items-center gap-2 text-slate-300">
+              <input
+                type="radio"
+                name="topic"
+                value={topic.id}
+                checked={selectedTopic === topic.id}
+                onChange={(e) => setSelectedTopic(Number(e.target.value))}
+                className="accent-cyan-500"
+              />
+              {topic.name}
+            </label>
+          ))}
+        </div>
+
+        <button
+          type="submit"
+          className="bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-md mt-6 transition font-medium w-full"
+        >
+          Save Changes
+        </button>
+      </form>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/EditProfile.jsx
+```jsx
+// src/components/EditProfile.jsx
+import { useState } from 'react';
+
+export const EditProfile = ({ user, onSaveProfile }) => {
+  const [fullName, setFullName] = useState(user ? user.name : '');
+  const [cohort, setCohort] = useState(user ? user.cohort : '');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validate cohort input: must be a non-negative number.
+    const cohortNumber = parseInt(cohort, 10);
+    if (isNaN(cohortNumber) || cohortNumber < 0) {
+      setError('Cohort number must be a non-negative number.');
+      return;
+    }
+    setError('');
+    const updatedUser = { ...user, name: fullName, cohort: cohortNumber };
+    // Example: Update the user in localStorage and invoke onSaveProfile callback.
+    localStorage.setItem('learning_user', JSON.stringify(updatedUser));
+    if (onSaveProfile) {
+      onSaveProfile(updatedUser);
+    }
+    alert('Profile updated successfully!');
+  };
+
+  return (
+    <div className="bg-slate-900 min-h-screen flex items-center justify-center font-mono">
+      <div className="bg-slate-800 shadow-lg p-6 rounded-xl max-w-lg w-full">
+        <h1 className="text-3xl font-bold text-cyan-400 mb-4">Edit Profile</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-slate-200 font-medium block">Full Name</label>
+            <input 
+              type="text" 
+              value={fullName} 
+              onChange={(e) => setFullName(e.target.value)} 
+              required 
+              className="bg-slate-700 text-white px-3 py-2 w-full rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none transition"
+            />
+          </div>
+          <div>
+            <label className="text-slate-200 font-medium block">Cohort</label>
+            <input 
+              type="number" 
+              value={cohort} 
+              onChange={(e) => {
+                // Only allow non-negative numbers
+                if (parseInt(e.target.value, 10) < 0) {
+                  setCohort('0');
+                } else {
+                  setCohort(e.target.value);
+                }
+              }} 
+              min="0"
+              required 
+              className="bg-slate-700 text-white px-3 py-2 w-full rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none transition"
+            />
+          </div>
+          {error && <p className="text-red-500">{error}</p>}
+          <button 
+            type="submit" 
+            className="w-full bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded-lg font-medium transition-all hover:scale-105"
+          >
+            Save Profile
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/favorites.jsx
+```jsx
+// src/components/Favorites.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getPostById } from '../services/postService';
+import { removeLike, getLikesForUser } from '../services/engagementService';
+
+export const Favorites = ({ currentUser }) => {
+  const [favorites, setFavorites] = useState([]); // Each item: { likeId, post }
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!currentUser) return;
+      try {
+        // Use the offloaded API call to fetch likes for this user.
+        const likesData = await getLikesForUser(currentUser.id);
+        // For each like, fetch the corresponding post.
+        const favoritePromises = likesData.map(async (like) => {
+          const post = await getPostById(like.postId);
+          return { likeId: like.id, post };
+        });
+        const favoritesWithPosts = await Promise.all(favoritePromises);
+        setFavorites(favoritesWithPosts);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || 'Error fetching favorites');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavorites();
+  }, [currentUser]);
+
+  const handleRemoveFavorite = async (likeId) => {
+    try {
+      await removeLike(likeId);
+      setFavorites((prev) => prev.filter((fav) => fav.likeId !== likeId));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (!currentUser) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+        <p>Please log in to view your favorites.</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+        <p>Loading favorites...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+      <div className="container mx-auto px-4 py-4">
+        <h1 className="text-4xl font-bold mb-4 text-cyan-400">Your Favorites</h1>
+        {favorites.length === 0 ? (
+          <p>You have not favorited any posts yet.</p>
+        ) : (
+          <ul className="space-y-4">
+            {favorites.map(({ likeId, post }) => (
+              <li
+                key={likeId}
+                className="flex items-center justify-between bg-slate-800 p-4 rounded-md"
+              >
+                <button 
+                  onClick={() => navigate(`/post/${post.id}`, { state: { post } })}
+                  className="text-xl font-semibold text-cyan-400 hover:underline"
+                >
+                  {post.title}
+                </button>
+                <button
+                  onClick={() => handleRemoveFavorite(likeId)}
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition-all duration-300"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/MyComments.jsx
+```jsx
+// src/components/MyComments.jsx
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCommentsByUserId, deleteComment } from "../services/commentService";
+
+export const MyComments = ({ currentUser }) => {
+  const navigate = useNavigate();
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    const fetchComments = async () => {
+      try {
+        const data = await getCommentsByUserId(currentUser.id);
+        setComments(data);
+      } catch (err) {
+        setError(err.message || "Error fetching comments");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [currentUser]);
+
+  const handleDelete = async (commentId) => {
+    try {
+      await deleteComment(commentId);
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+    }
+  };
+
+  if (!currentUser) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+        <p>Please log in to view your comments.</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+        <p>Loading your comments...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-slate-900 min-h-screen pt-20 font-mono text-white">
+      <div className="container mx-auto px-4 py-4">
+        <h1 className="text-4xl font-bold mb-6 text-cyan-400 text-center">My Comments</h1>
+        {comments.length === 0 ? (
+          <p className="text-slate-400 text-lg text-center">You have not made any comments yet.</p>
+        ) : (
+          <ul className="space-y-4">
+            {comments.map((comment) => (
+              <li key={comment.id} className="bg-slate-800 p-4 rounded-lg">
+                <p className="text-slate-200">{comment.body}</p>
+                <p className="text-xs text-slate-400 mt-1">
+                  On Post #{comment.postId} | {comment.date}
+                </p>
+                <button 
+                  onClick={() => handleDelete(comment.id)}
+                  className="mt-2 text-red-500 hover:text-red-400 text-sm"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/NavBar.jsx
+```jsx
+// src/components/NavBar.jsx
+import { useNavigate, Link } from "react-router-dom";
+
+export const NavBar = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("learning_user");
+
+  const handleLogout = () => {
+    localStorage.removeItem("learning_user");
+    navigate("/login", { replace: true });
+  };
+
+  const handleAllPosts = () => {
+    navigate("/", { state: { resetFilters: true }, replace: true });
+  };
+
+  return (
+    <nav className="bg-gradient-to-r from-black via-purple-900 to-purple-800 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Brand / Title */}
+          <div className="flex-shrink-0">
+            <Link
+              to="/"
+              onClick={() =>
+                navigate("/", { state: { resetFilters: true }, replace: true })
+              }
+              className="text-white text-2xl font-bold hover:text-gray-100 transition-all duration-300 transform hover:scale-105"
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            >
+              Learning Moments
+            </Link>
+          </div>
+
+          {/* Nav Items */}
+          <div className="flex items-center gap-8">
+            <button
+              onClick={handleAllPosts}
+              style={{ fontFamily: "'JetBrains Mono', monospace" }}
+              className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+            >
+              All Posts
+            </button>
+
+            {isLoggedIn && (
+              <>
+                <Link
+                  to="/my-posts"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  My Posts
+                </Link>
+
+                <Link
+                  to="/new-post"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  New Post
+                </Link>
+
+                <Link
+                  to="/favorites"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  Favorites
+                </Link>
+
+                <Link
+                  to="/edit-profile"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  Edit Profile
+                </Link>
+
+                <Link
+                  to="/my-comments"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  My Comments
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+```
+BREAK
+
+### src/components/NewPost.jsx
+```jsx
+// src/components/NewPost.jsx
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getTopics, createPost } from "../services/postService";
+
+export const NewPost = ({ currentUser }) => {
+  const [topics, setTopics] = useState([]);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [topicId, setTopicId] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const topicsData = await getTopics();
+        setTopics(topicsData);
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+      }
+    };
+    fetchTopics();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!currentUser) return;
+
+    const newPost = {
+      title,
+      body,
+      userId: currentUser.id,
+      topicId: parseInt(topicId),
+      date: new Date().toISOString().slice(0, 10) // e.g. "2025-02-27"
+    };
+
+    try {
+      await createPost(newPost);
+      navigate("/my-posts");
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen pt-20 bg-gray-900 text-white px-6 py-10 flex flex-col items-center">
+      <h1 className="text-3xl font-extrabold tracking-tight text-gray-100 mb-6">
+        Create a New Post
+      </h1>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-xl border border-gray-700"
+      >
+        <label className="block text-gray-400 mb-2">Title</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="w-full mb-4 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+
+        <label className="block text-gray-400 mb-2">Body</label>
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          required
+          rows={4}
+          className="w-full mb-4 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+
+        <label className="block text-gray-400 mb-2">Topic</label>
+        <select
+          value={topicId}
+          onChange={(e) => setTopicId(e.target.value)}
+          required
+          className="w-full mb-6 bg-gray-700 text-gray-300 px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">Select a topic</option>
+          {topics.map((topic) => (
+            <option key={topic.id} value={topic.id}>
+              {topic.name}
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="submit"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition font-medium"
+        >
+          Save
+        </button>
+      </form>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/post/ui/PostView.jsx
+```jsx
+// src/components/post/ui/PostView.jsx
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
+export const PostView = ({
+  post,
+  currentUser,
+  userLiked,
+  onToggleLike,
+  onDelete,
+  confirmDelete,
+  showDeleteButton,
+  isAuthor,
+  onBack,
+  children,
+}) => {
+  if (!post) {
+    return <div className="text-white">No post available.</div>;
+  }
+
+  return (
+    <div className="bg-slate-900 font-mono">
+      <div className="container mx-auto px-4 py-2 text-slate-100">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="mb-2 flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
+          >
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            Back to Posts
+          </button>
+        )}
+
+        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg shadow-lg p-3 border border-cyan-500/20">
+          <div className="flex justify-between items-center mb-1">
+            <div>
+              <h1 className="text-xl font-bold text-cyan-400">{post.title}</h1>
+              <p className="text-xs text-cyan-500/80">
+                Topic: {post.topic?.name || 'General'}
+              </p>
+            </div>
+            {isAuthor && (
+              <Link
+                to={`/edit-post/${post.id}`}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-md text-xs font-medium transition-all hover:scale-105 border border-blue-500/20"
+              >
+                Edit
+              </Link>
+            )}
+          </div>
+
+          <div className="border-t border-b border-cyan-500/30 py-1 my-1">
+            <p className="text-slate-300 whitespace-pre-line text-xs">{post.body}</p>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-slate-400 text-xs">
+                Author:{' '}
+                <Link
+                  to={`/user-profile/${post.userId}`}
+                  className="text-cyan-400 hover:text-cyan-300 hover:underline"
+                >
+                  {post.authorName || `User ${post.userId}`}
+                </Link>
+              </p>
+              {children}
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleLike(e);
+              }}
+              className="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded-md text-xs font-medium transition-all hover:scale-105 border border-cyan-500/20 flex items-center"
+            >
+              {userLiked ? (
+                <svg
+                  className="w-3 h-3 mr-1 text-purple-400"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6.004 6.004 0 0116.5 3c3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              ) : (
+                <svg
+                  className="w-3 h-3 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              )}
+              {userLiked ? 'Unlike' : 'Like'}
+            </button>
+          </div>
+
+          {showDeleteButton && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(e);
+              }}
+              className={`mt-2 text-white px-2 py-1 rounded-md text-xs font-medium transition-all hover:scale-105 border ${
+                confirmDelete
+                  ? 'bg-yellow-500 hover:bg-yellow-600 border-yellow-500/20'
+                  : 'bg-red-600 hover:bg-red-700 border-red-600/20'
+              }`}
+            >
+              {confirmDelete ? 'Confirm?' : 'Delete'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+PostView.propTypes = {
+  post: PropTypes.object.isRequired,
+  currentUser: PropTypes.object,
+  userLiked: PropTypes.bool.isRequired,
+  onToggleLike: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  confirmDelete: PropTypes.bool,
+  showDeleteButton: PropTypes.bool,
+  isAuthor: PropTypes.bool,
+  onBack: PropTypes.func,
+  children: PropTypes.node,
+};
+
+PostView.defaultProps = {
+  currentUser: null,
+  showDeleteButton: false,
+  confirmDelete: false,
+  isAuthor: false,
+  onDelete: null,
+  onBack: null,
+  children: null,
+};
+
+```
+BREAK
+
+### src/components/post/wrappers/AllPostsWrapper.jsx
+```jsx
+// src/components/post/wrappers/AllPostsWrapper.jsx
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getPosts, getTopics, getLikes } from '../../../services/postService';
+import { PostView } from '../ui/PostView';
+import { addLike, removeLike } from '../../../services/engagementService';
+import { useAsync } from '../../../hooks/useAsync';
+import { filterPosts } from '../../../helpers/filterPosts';
+
+export const AllPostsWrapper = ({ currentUser }) => {
+  const navigate = useNavigate();
+  const [hoveredPostId, setHoveredPostId] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [likes, setLikes] = useState([]); // local state for likes
+
+  const { 
+    data: postsData, 
+    loading, 
+    error 
+  } = useAsync(async () => {
+    const [posts, topics, likesFromServer] = await Promise.all([
+      getPosts(),
+      getTopics(),
+      getLikes(),
+    ]);
+
+    // Set local likes state initially (only for current user)
+    setLikes(
+      currentUser
+        ? likesFromServer.filter(like => like.userId === currentUser.id)
+        : []
+    );
+
+    const filteredPosts = filterPosts(posts, selectedTopic, searchTerm);
+
+    return { 
+      posts: filteredPosts, 
+      topics 
+    };
+  }, [selectedTopic, searchTerm, currentUser?.id]);
+
+  // Optimistic like toggle
+  const handleLikeToggle = useCallback((postId) => {
+    if (!currentUser) return;
+
+    const existingLike = likes.find(
+      (like) => like.userId === currentUser.id && like.postId === postId
+    );
+
+    if (existingLike) {
+      // Check if the like is temporary by converting the id to a string.
+      if (String(existingLike.id).startsWith("temp-")) {
+        setLikes(prevLikes => prevLikes.filter(like => like.id !== existingLike.id));
+        return;
+      }
+      // Optimistically remove like from state for persisted likes
+      setLikes(prevLikes => prevLikes.filter(like => like.id !== existingLike.id));
+      // Submit removal to the server
+      removeLike(existingLike.id).catch((err) => {
+        console.error("Error removing like:", err);
+        // Revert state if server call fails
+        setLikes(prevLikes => [...prevLikes, existingLike]);
+      });
+    } else {
+      // Optimistically add a temporary like
+      const tempLike = { id: `temp-${Date.now()}`, postId, userId: currentUser.id };
+      setLikes(prevLikes => [...prevLikes, tempLike]);
+      // Then, send request to add like
+      addLike(postId, currentUser.id)
+        .then((newLike) => {
+          // Replace temporary like with the real like from the server
+          setLikes(prevLikes =>
+            prevLikes.map(like => like.id === tempLike.id ? newLike : like)
+          );
+        })
+        .catch((err) => {
+          console.error("Error adding like:", err);
+          // Revert state if server call fails
+          setLikes(prevLikes => prevLikes.filter(like => like.id !== tempLike.id));
+        });
+    }
+  }, [currentUser, likes]);
+
+  if (error) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-red-500 text-lg">
+        Error: {error.message}
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono text-cyan-300 text-lg">
+        Loading posts...
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ backgroundColor: 'rgb(15 23 42)' }}
+      animate={{ 
+        backgroundColor: hoveredPostId 
+          ? 'rgb(15 23 42 / 0.92)' 
+          : 'rgb(15 23 42)',
+      }}
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
+      className="min-h-screen pt-20 font-mono"
+    >
+      <div className="container mx-auto px-4 py-4 text-slate-100">
+        <h1 className="text-4xl font-bold mb-4 text-cyan-400">All Posts</h1>
+        {postsData?.posts?.length === 0 ? (
+          <p className="text-slate-400 text-lg">No posts found.</p>
+        ) : (
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative"
+          >
+            <AnimatePresence>
+              {postsData?.posts?.map((post) => {
+                const userLiked = likes.some(
+                  (like) => like.postId === post.id
+                );
+                return (
+                  <motion.div
+                    key={post.id}
+                    layout
+                    onHoverStart={() => setHoveredPostId(post.id)}
+                    onHoverEnd={() => setHoveredPostId(null)}
+                    onClick={() =>
+                      navigate(`/post/${post.id}`, { state: { post } })
+                    }
+                    className="relative cursor-pointer transition-all duration-150 ease-out bg-slate-800 shadow-lg rounded-xl p-6 overflow-hidden"
+                  >
+                    <PostView
+                      post={post}
+                      currentUser={currentUser}
+                      userLiked={userLiked}
+                      onToggleLike={() => handleLikeToggle(post.id)}
+                    />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+```
+BREAK
+
+### src/components/post/wrappers/MyPostsListWrapper.jsx
+```jsx
+// src/components/post/wrappers/MyPostsListWrapper.jsx
+import { useState, useEffect } from 'react';
+import { getPostsByUserId } from '../../../services/postService';
+import { MyPostsWrapper } from './MyPostsWrapper';
+
+export const MyPostsListWrapper = ({ currentUser }) => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchMyPosts = async () => {
+      if (!currentUser) return;
+      try {
+        const data = await getPostsByUserId(currentUser.id);
+        setPosts(data);
+      } catch (err) {
+        setError(err.message || 'Error fetching your posts.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMyPosts();
+  }, [currentUser]);
+
+  const handlePostDeleted = (postId) => {
+    // Immediately remove the post from state without any animation.
+    setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+        <div className="container mx-auto px-4 py-4 text-slate-100 text-center">
+          <p className="text-cyan-300 text-lg">Loading your posts...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+        <div className="container mx-auto px-4 py-4 text-slate-100 text-center">
+          <p className="text-red-500 text-lg">Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (posts.length === 0) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+        <div className="container mx-auto px-4 py-4 text-slate-100 text-center">
+          <p className="text-slate-400 text-lg">You haven't written any posts yet.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+      <div className="container mx-auto px-4 py-4 text-slate-100">
+        <h1 className="text-4xl font-bold mb-4 text-cyan-400 text-center">My Posts</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+          {posts.map((post) => (
+            <div key={post.id} className="relative overflow-visible w-full max-w-md">
+              <MyPostsWrapper 
+                post={post} 
+                currentUser={currentUser} 
+                onPostDeleted={handlePostDeleted}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/post/wrappers/MyPostsWrapper.jsx
+```jsx
+// learning-moments\src\components\post\wrappers\MyPostsWrapper.jsx
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { PostView } from '../ui/PostView';
+import { deletePost } from '../../../services/postService';
+
+// Make sure to use 'export const' here
+export const MyPostsWrapper = ({ post, currentUser, onPostDeleted, isRemoving }) => {
+  const navigate = useNavigate();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [localRemoving, setLocalRemoving] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  
+  // Combine local and parent removing states
+  const removing = localRemoving || isRemoving;
+
+  useEffect(() => {
+    if (isRemoving) {
+      setLocalRemoving(true);
+    }
+  }, [isRemoving]);
+
+  const handleDelete = async () => {
+    setLocalRemoving(true);
+    
+    try {
+      await deletePost(post.id);
+      // Signal to parent component to start removal process
+      onPostDeleted(post.id);
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      setLocalRemoving(false); // Reset if there's an error
+      setConfirmDelete(false);
+    }
+  };
+
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+    } else {
+      handleDelete();
+    }
+  };
+
+  const handleClick = () => {
+    if (!removing) {
+      navigate(`/edit-post/${post.id}`, { state: { post } });
+    }
+  };
+
+  const hoverVariants = {
+    normal: {
+      scale: 1,
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      y: 0,
+      opacity: 0.95,
+      filter: "brightness(1)",
+      zIndex: 0
+    },
+    hover: {
+      scale: 1.03,
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)",
+      y: -4,
+      opacity: 1,
+      filter: "brightness(1.05)",
+      zIndex: 10
+    },
+    removing: {
+      scale: 0.8,
+      opacity: 0.6,
+      x: 50,
+      y: 10,
+      rotate: -10,
+      boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
+      zIndex: -1
+    }
+  };
+
+  return (
+    <motion.div
+      onClick={handleClick}
+      onHoverStart={() => !removing && setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      layout
+      style={{ 
+        transformOrigin: 'center center',
+        position: 'relative' 
+      }}
+      initial="normal"
+      animate={removing ? "removing" : (hovered ? "hover" : "normal")}
+      exit={{
+        opacity: 0,
+        scale: 0.7,
+        rotate: -10,
+        y: 10,
+        x: 50,
+        transition: { duration: 0.4, ease: "easeInOut" }
+      }}
+      variants={hoverVariants}
+      transition={{
+        type: 'tween', 
+        ease: 'easeOut',
+        duration: 0.2
+      }}
+      className="cursor-pointer relative bg-slate-800 shadow-lg rounded-xl p-6 h-full w-full"
+    >
+      <PostView
+        post={post}
+        currentUser={currentUser}
+        userLiked={false}
+        onToggleLike={() => {}}
+        showDeleteButton={!removing}
+        onDelete={handleDeleteClick}
+        confirmDelete={confirmDelete}
+        isAuthor={currentUser && currentUser.id === post.userId}
+        onEdit={() => !removing && navigate(`/edit-post/${post.id}`)}
+      />
+    </motion.div>
+  );
+};
+
+```
+BREAK
+
+### src/components/post/wrappers/PostDetailsWrapper.jsx
+```jsx
+// src/components/post/wrappers/PostDetailsWrapper.jsx
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { usePostDetails } from "../../../hooks/usePostDetails";
+import { usePostComments } from "../../../hooks/usePostComments";
+import { addComment, deleteComment } from "../../../services/commentService";
+import { PostView } from "../ui/PostView";
+
+export const PostDetailsWrapper = ({ currentUser }) => {
+  const { postId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const initialPost = location.state?.post || null;
+  const { post, userLiked, toggleLike, loading, error } = usePostDetails(
+    postId,
+    currentUser,
+    initialPost
+  );
+
+  // Destructure setComments from the hook to update comments on add/delete
+  const { comments, setComments, loadingComments, errorComments } = usePostComments(postId);
+  const [newComment, setNewComment] = useState("");
+
+  const handleBack = () => {
+    navigate("/", { state: { resetFilters: false } });
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    const commentToAdd = {
+      postId: Number(postId),
+      userId: currentUser.id,
+      body: newComment,
+      date: new Date().toISOString().slice(0, 10),
+    };
+
+    try {
+      const createdComment = await addComment(commentToAdd);
+      setComments((prev) => [...prev, createdComment]);
+      setNewComment("");
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteComment(commentId);
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+        <div className="container mx-auto px-4 py-4 text-slate-100">
+          <p className="text-cyan-300 text-lg">Loading post...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+        <div className="container mx-auto px-4 py-4 text-slate-100">
+          <p className="text-red-500">Error loading post.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-slate-900 min-h-screen pt-20 font-mono">
+      <div className="container mx-auto px-4 py-4 text-slate-100">
+        <PostView
+          post={post}
+          currentUser={currentUser}
+          userLiked={userLiked}
+          onToggleLike={toggleLike}
+          isAuthor={currentUser && Number(currentUser.id) === Number(post?.userId)}
+          onBack={handleBack}
+        />
+
+        {/* Comments Section */}
+        <div className="mt-8 bg-slate-800 p-6 rounded-lg shadow-md border border-slate-700">
+          <h2 className="text-2xl font-bold mb-4 text-cyan-400">Comments</h2>
+          {loadingComments ? (
+            <p className="text-cyan-300">Loading comments...</p>
+          ) : errorComments ? (
+            <p className="text-red-500">Error loading comments.</p>
+          ) : (
+            <ul className="space-y-4">
+              {comments.map((comment) => (
+                <li
+                  key={comment.id}
+                  className="bg-slate-700 p-4 rounded-lg flex justify-between items-start"
+                >
+                  <div className="flex-1">
+                    <p className="text-slate-200">{comment.body}</p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      By User {comment.userId} on {comment.date}
+                    </p>
+                  </div>
+                  {currentUser?.id === comment.userId && (
+                    <button
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="text-red-500 hover:text-red-400 text-sm ml-4"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Add Comment Input */}
+          {currentUser && (
+            <div className="mt-6">
+              <textarea
+                className="w-full p-3 rounded-lg bg-slate-700 text-slate-200 border border-slate-600 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+                placeholder="Add your comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                rows="2"
+              />
+              <button
+                onClick={handleAddComment}
+                className="mt-4 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition font-medium w-full"
+              >
+                Post Comment
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/components/UserProfile.jsx
+```jsx
+// src/components/UserProfile.jsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+export const UserProfile = ({ user, postCount, isCurrentUser, onEditProfile }) => {
+  if (!user) {
+    return <div>User profile not available.</div>;
+  }
+
+  return (
+    <div>
+      <h1>{ user.name}'s Profile</h1>
+      <p>Cohort: {user.cohort}</p>
+      <p>Posts Written: {postCount}</p>
+      {isCurrentUser && (
+        <button onClick={onEditProfile}>Edit Profile</button>
+      )}
+      {/* Additional user details can be added here */}
+    </div>
+  );
+};
+
+```
+BREAK
+
+### src/main.jsx
+```jsx
+// src/main.jsx
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import {App} from './App';
+import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+```
+BREAK
+
+### src/views/ApplicationViews.jsx
+```jsx
+// src/views/ApplicationViews.jsx
+import { Routes, Route } from "react-router-dom";
+import { NavBar } from "../components/NavBar";
+import { AllPostsWrapper } from "../components/post/wrappers/AllPostsWrapper";
+import { MyPostsListWrapper } from "../components/post/wrappers/MyPostsListWrapper";
+import { PostDetailsWrapper } from "../components/post/wrappers/PostDetailsWrapper";
+import { NewPost } from "../components/NewPost";
+import { Favorites } from "../components/favorites";
+import { EditPost } from "../components/EditPost";
+import { EditProfile } from "../components/EditProfile";
+import { MyComments } from "../components/MyComments";
+
+export const ApplicationViews = () => {
+  const currentUser = localStorage.getItem("learning_user")
+    ? JSON.parse(localStorage.getItem("learning_user"))
+    : null;
+
+  return (
+    <>
+      <NavBar />
+      <div className="pt-[72px] px-6">
+        <Routes>
+          <Route
+            path="/"
+            element={<AllPostsWrapper currentUser={currentUser} />}
+          />
+          <Route
+            path="/favorites"
+            element={<Favorites currentUser={currentUser} />}
+          />
+          <Route
+            path="/my-posts"
+            element={<MyPostsListWrapper currentUser={currentUser} />}
+          />
+          <Route
+            path="/new-post"
+            element={<NewPost currentUser={currentUser} />}
+          />
+          <Route
+            path="/edit-post/:postId"
+            element={<EditPost currentUser={currentUser} />}
+          />
+          <Route
+            path="/post/:postId"
+            element={<PostDetailsWrapper currentUser={currentUser} />}
+          />
+          <Route
+            path="/edit-profile"
+            element={
+              <EditProfile user={currentUser} onSaveProfile={() => {}} />
+            }
+          />
+          <Route
+            path="/my-comments"
+            element={<MyComments currentUser={currentUser} />}
+          />
+          <Route
+            path="*"
+            element={<div className="text-white">Not Found</div>}
+          />
+        </Routes>
+      </div>
+    </>
+  );
+};
+
+```
+BREAK
+
+### src/views/Authorized.jsx
+```jsx
+import { Navigate, useLocation } from "react-router-dom"
+
+// We can access child components the same way we access props. Child components are passed to our props as a key/value pair where
+// children is the key.
+
+export const Authorized = ({ children }) => {
+  let location = useLocation()
+
+  // Check if user is logged in. If they are, render the CHILD components (in this case, the ApplicationViews component)
+  if (localStorage.getItem("learning_user")) {
+    return children
+  }
+  // If the user is NOT logged in, redirect them to the login page using the Navigate component from react-router-dom
+  else {
+    return <Navigate to={`/login`} state={{ from: location }} replace />
+  }
+}
+
+```
+BREAK
+

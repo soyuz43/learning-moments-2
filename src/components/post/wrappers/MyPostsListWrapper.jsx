@@ -2,8 +2,6 @@
 import { useState, useEffect } from 'react';
 import { getPostsByUserId } from '../../../services/postService';
 import { MyPostsWrapper } from './MyPostsWrapper';
-import { motion } from 'framer-motion';
-
 
 export const MyPostsListWrapper = ({ currentUser }) => {
   const [posts, setPosts] = useState([]);
@@ -25,10 +23,15 @@ export const MyPostsListWrapper = ({ currentUser }) => {
     fetchMyPosts();
   }, [currentUser]);
 
+  const handlePostDeleted = (postId) => {
+    // Immediately remove the post from state without any animation.
+    setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+  };
+
   if (loading) {
     return (
       <div className="bg-slate-900 min-h-screen pt-20 font-mono">
-        <div className="container mx-auto px-4 py-4 text-slate-100">
+        <div className="container mx-auto px-4 py-4 text-slate-100 text-center">
           <p className="text-cyan-300 text-lg">Loading your posts...</p>
         </div>
       </div>
@@ -38,7 +41,7 @@ export const MyPostsListWrapper = ({ currentUser }) => {
   if (error) {
     return (
       <div className="bg-slate-900 min-h-screen pt-20 font-mono">
-        <div className="container mx-auto px-4 py-4 text-slate-100">
+        <div className="container mx-auto px-4 py-4 text-slate-100 text-center">
           <p className="text-red-500 text-lg">Error: {error}</p>
         </div>
       </div>
@@ -48,7 +51,7 @@ export const MyPostsListWrapper = ({ currentUser }) => {
   if (posts.length === 0) {
     return (
       <div className="bg-slate-900 min-h-screen pt-20 font-mono">
-        <div className="container mx-auto px-4 py-4 text-slate-100">
+        <div className="container mx-auto px-4 py-4 text-slate-100 text-center">
           <p className="text-slate-400 text-lg">You haven't written any posts yet.</p>
         </div>
       </div>
@@ -56,23 +59,21 @@ export const MyPostsListWrapper = ({ currentUser }) => {
   }
 
   return (
-    <motion.div
-      className="bg-slate-900 min-h-screen pt-20 font-mono"
-      layout
-      initial={{ backgroundColor: 'rgb(15 23 42)' }}
-      animate={{ backgroundColor: 'rgb(15 23 42 / 0.9)' }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="bg-slate-900 min-h-screen pt-20 font-mono">
       <div className="container mx-auto px-4 py-4 text-slate-100">
-        <h1 className="text-4xl font-bold mb-4 text-cyan-400">My Posts</h1>
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 relative"
-        >
+        <h1 className="text-4xl font-bold mb-4 text-cyan-400 text-center">My Posts</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {posts.map((post) => (
-            <MyPostsWrapper key={post.id} post={post} currentUser={currentUser} />
+            <div key={post.id} className="relative overflow-visible w-full max-w-md">
+              <MyPostsWrapper 
+                post={post} 
+                currentUser={currentUser} 
+                onPostDeleted={handlePostDeleted}
+              />
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

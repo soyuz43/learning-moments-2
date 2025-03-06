@@ -44,3 +44,21 @@ export const removeLike = async (likeId) => {
     throw error;
   }
 };
+
+/**
+ * Fetch likes for a specific user.
+ * @param {number} userId - ID of the user whose likes to fetch.
+ * @returns {Promise<object[]>} Array of like objects.
+ */
+export const getLikesForUser = async (userId) => {
+  try {
+    const response = await fetch(`${apiUrl}/likes?userId=${userId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch likes for user");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching likes for user:", error);
+    throw error;
+  }
+};

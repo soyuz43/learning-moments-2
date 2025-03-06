@@ -1,6 +1,5 @@
 // src/components/NavBar.jsx
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const NavBar = () => {
   const navigate = useNavigate();
@@ -26,8 +25,7 @@ export const NavBar = () => {
               onClick={() =>
                 navigate("/", { state: { resetFilters: true }, replace: true })
               }
-              className="text-white text-2xl font-bold hover:text-gray-100 transition-all 
-                         duration-300 transform hover:scale-105"
+              className="text-white text-2xl font-bold hover:text-gray-100 transition-all duration-300 transform hover:scale-105"
               style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
               Learning Moments
@@ -39,9 +37,7 @@ export const NavBar = () => {
             <button
               onClick={handleAllPosts}
               style={{ fontFamily: "'JetBrains Mono', monospace" }}
-              className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium 
-                         transition-all duration-300 transform hover:scale-105 border-b-2 
-                         border-transparent hover:border-white"
+              className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
             >
               All Posts
             </button>
@@ -51,9 +47,7 @@ export const NavBar = () => {
                 <Link
                   to="/my-posts"
                   style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium 
-                             transition-all duration-300 transform hover:scale-105 border-b-2 
-                             border-transparent hover:border-white"
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
                 >
                   My Posts
                 </Link>
@@ -61,30 +55,39 @@ export const NavBar = () => {
                 <Link
                   to="/new-post"
                   style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium 
-                             transition-all duration-300 transform hover:scale-105 border-b-2 
-                             border-transparent hover:border-white"
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
                 >
                   New Post
                 </Link>
 
-                {/* 🔥 NEW: Edit Profile Link */}
+                <Link
+                  to="/favorites"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  Favorites
+                </Link>
+
                 <Link
                   to="/edit-profile"
                   style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium 
-                             transition-all duration-300 transform hover:scale-105 border-b-2 
-                             border-transparent hover:border-white"
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
                 >
                   Edit Profile
+                </Link>
+
+                <Link
+                  to="/my-comments"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
+                >
+                  My Comments
                 </Link>
 
                 <button
                   onClick={handleLogout}
                   style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium 
-                             transition-all duration-300 transform hover:scale-105 border-b-2 
-                             border-transparent hover:border-white"
+                  className="text-gray-100 hover:text-white px-3 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105 border-b-2 border-transparent hover:border-white"
                 >
                   Logout
                 </button>
