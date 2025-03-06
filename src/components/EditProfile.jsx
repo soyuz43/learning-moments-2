@@ -4,11 +4,24 @@ import { useState } from 'react';
 export const EditProfile = ({ user, onSaveProfile }) => {
   const [fullName, setFullName] = useState(user ? user.name : '');
   const [cohort, setCohort] = useState(user ? user.cohort : '');
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedUser = { ...user, fullName, cohort };
-    onSaveProfile(updatedUser);
+    // Validate cohort input: must be a non-negative number.
+    const cohortNumber = parseInt(cohort, 10);
+    if (isNaN(cohortNumber) || cohortNumber < 0) {
+      setError('Cohort number must be a non-negative number.');
+      return;
+    }
+    setError('');
+    const updatedUser = { ...user, name: fullName, cohort: cohortNumber };
+    // Example: Update the user in localStorage and invoke onSaveProfile callback.
+    localStorage.setItem('learning_user', JSON.stringify(updatedUser));
+    if (onSaveProfile) {
+      onSaveProfile(updatedUser);
+    }
+    alert('Profile updated successfully!');
   };
 
   return (
@@ -31,11 +44,20 @@ export const EditProfile = ({ user, onSaveProfile }) => {
             <input 
               type="number" 
               value={cohort} 
-              onChange={(e) => setCohort(e.target.value)} 
+              onChange={(e) => {
+                // Only allow non-negative numbers
+                if (parseInt(e.target.value, 10) < 0) {
+                  setCohort('0');
+                } else {
+                  setCohort(e.target.value);
+                }
+              }} 
+              min="0"
               required 
               className="bg-slate-700 text-white px-3 py-2 w-full rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none transition"
             />
           </div>
+          {error && <p className="text-red-500">{error}</p>}
           <button 
             type="submit" 
             className="w-full bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded-lg font-medium transition-all hover:scale-105"
